@@ -19,6 +19,7 @@ VARIABLE_ALIASES = {
     "ARIA":           ["ARIA"],
     "Industry06":     ["Industry06"],
     "BusinessSize":   ["BusinessSize"],
+    "Year":           ["Year"],
 }
 
 # Which row (0-indexed, after the pandas header row) contains the variable names

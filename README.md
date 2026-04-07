@@ -33,9 +33,11 @@ python run_analysis.py path/to/survey_data.xlsx
 ### Options
 
 ```
-python run_analysis.py data.xlsx                     # defaults: output to ./output/
-python run_analysis.py data.xlsx -o results/         # custom output directory
-python run_analysis.py data.xlsx --weight-col Weight  # specify weight column (default: Weight)
+python run_analysis.py data.xlsx                       # defaults: output to ./output/
+python run_analysis.py data.xlsx -o results/           # custom output directory
+python run_analysis.py data.xlsx --year-from 2016      # only data from 2016 onwards
+python run_analysis.py data.xlsx --year-from 2020 --year-to 2025  # year range
+python run_analysis.py data.xlsx --weight-col Weight   # specify weight column (default: Weight)
 ```
 
 ### Output

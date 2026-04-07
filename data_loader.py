@@ -52,6 +52,8 @@ def load_survey(path: str, weight_col: str = "Weight") -> pd.DataFrame:
         data["WeeklyWeight"] = pd.to_numeric(data["WeeklyWeight"], errors="coerce")
     if "Week" in data.columns:
         data["Week"] = pd.to_datetime(data["Week"], errors="coerce")
+    if "Year" in data.columns:
+        data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
 
     # ── Validation ──
     required = ["Week", "Weight", "RecruitShort", "Difficulty", "FutStaffChange", "FutConcern"]
@@ -64,10 +66,53 @@ def load_survey(path: str, weight_col: str = "Weight") -> pd.DataFrame:
     n = len(data)
     n_valid_weight = data["Weight"].notna().sum() if "Weight" in data.columns else 0
     weeks = sorted(data["Week"].dropna().unique()) if "Week" in data.columns else []
+    years = sorted(data["Year"].dropna().unique()) if "Year" in data.columns else []
 
     print(f"Loaded {n} records across {len(weeks)} week(s)")
     print(f"  Valid weights: {n_valid_weight}/{n}")
-    print(f"  Weeks: {[w.strftime('%Y-%m-%d') for w in weeks]}")
+    print(f"  Years in data: {[int(y) for y in years]}")
+    print(f"  Week range: {weeks[0].strftime('%Y-%m-%d') if weeks else 'N/A'} → {weeks[-1].strftime('%Y-%m-%d') if weeks else 'N/A'}")
     print(f"  Columns mapped: {matched}")
 
     return data
+
+
+def filter_by_year(df: pd.DataFrame, year_from: int = None, year_to: int = None) -> pd.DataFrame:
+    """
+    Filter the dataset by year range.
+
+    Parameters
+    ----------
+    df : DataFrame with a 'Year' column (or 'Week' as fallback)
+    year_from : minimum year (inclusive), e.g. 2016
+    year_to : maximum year (inclusive), e.g. 2026
+
+    Returns filtered DataFrame.
+    """
+    original_n = len(df)
+
+    if "Year" in df.columns:
+        year_col = df["Year"]
+    elif "Week" in df.columns:
+        year_col = df["Week"].dt.year
+    else:
+        print("WARNING: No Year or Week column found — skipping year filter")
+        return df
+
+    mask = pd.Series(True, index=df.index)
+    if year_from is not None:
+        mask &= year_col >= year_from
+    if year_to is not None:
+        mask &= year_col <= year_to
+
+    filtered = df[mask].copy().reset_index(drop=True)
+    label_parts = []
+    if year_from is not None:
+        label_parts.append(f">= {year_from}")
+    if year_to is not None:
+        label_parts.append(f"<= {year_to}")
+    label = " and ".join(label_parts)
+
+    print(f"  Year filter ({label}): {original_n} → {len(filtered)} records")
+
+    return filtered

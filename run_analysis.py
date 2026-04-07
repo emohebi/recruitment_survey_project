@@ -4,9 +4,12 @@ Recruitment Survey Analysis — CLI entry point.
 
 Usage:
     python run_analysis.py <input_excel> [-o OUTPUT_DIR] [--weight-col WEIGHT_COL]
+                           [--year-from YEAR] [--year-to YEAR]
 
 Example:
     python run_analysis.py Book1.xlsx
+    python run_analysis.py Book1.xlsx --year-from 2016
+    python run_analysis.py Book1.xlsx --year-from 2020 --year-to 2025
     python run_analysis.py Book1.xlsx -o results/ --weight-col WeeklyWeight
 """
 
@@ -15,7 +18,7 @@ import os
 import sys
 import time
 
-from data_loader import load_survey
+from data_loader import load_survey, filter_by_year
 from indicators import run_all_analyses
 from excel_report import write_excel
 from dashboard import build_dashboard
@@ -39,6 +42,16 @@ def main():
         default="Weight",
         help="Weight variable to use: 'Weight' (monthly, default) or 'WeeklyWeight'",
     )
+    parser.add_argument(
+        "--year-from",
+        type=int, default=None,
+        help="Include data from this year onwards (inclusive), e.g. --year-from 2016",
+    )
+    parser.add_argument(
+        "--year-to",
+        type=int, default=None,
+        help="Include data up to this year (inclusive), e.g. --year-to 2025",
+    )
     args = parser.parse_args()
 
     if not os.path.isfile(args.input_file):
@@ -53,13 +66,24 @@ def main():
     print()
 
     # 1. Load
-    print("[1/4] Loading data...")
+    print("[1/5] Loading data...")
     t0 = time.time()
     df = load_survey(args.input_file, weight_col=args.weight_col)
     print(f"      Done in {time.time() - t0:.1f}s\n")
 
-    # 2. Calculate
-    print("[2/4] Calculating indicators...")
+    # 2. Filter by year
+    print("[2/5] Applying year filter...")
+    if args.year_from is not None or args.year_to is not None:
+        df = filter_by_year(df, year_from=args.year_from, year_to=args.year_to)
+    else:
+        print("  No year filter applied (use --year-from / --year-to)")
+    if len(df) == 0:
+        print("ERROR: No records remain after filtering. Check your year range.")
+        sys.exit(1)
+    print()
+
+    # 3. Calculate
+    print("[3/5] Calculating indicators...")
     t0 = time.time()
     results = run_all_analyses(df, weight_col=args.weight_col)
     print(f"      Done in {time.time() - t0:.1f}s\n")
@@ -74,17 +98,24 @@ def main():
     print(f"      │  Future Staff Increase (FSI):  {latest['FSI']*100:>10.1f}%     │")
     print(f"      │  Cost Concern:                 {latest['Cost_Concern']*100:>10.1f}%     │")
     print(f"      │  N = {int(latest['N']):>4d}   Total Weight = {latest['Sum_Weight']:>9.1f}     │")
-    print("      └─────────────────────────────────────────────┘\n")
+    print("      └─────────────────────────────────────────────┘")
+    if args.year_from or args.year_to:
+        parts = []
+        if args.year_from: parts.append(f">= {args.year_from}")
+        if args.year_to:   parts.append(f"<= {args.year_to}")
+        print(f"      Year filter: {' and '.join(parts)}")
+    print(f"      Weeks in dataset: {len(nat)}")
+    print()
 
-    # 3. Excel
-    print("[3/4] Writing Excel report...")
+    # 4. Excel
+    print("[4/5] Writing Excel report...")
     t0 = time.time()
     excel_path = os.path.join(args.output_dir, "Recruitment_Survey_Stats.xlsx")
     write_excel(results, excel_path)
     print(f"      Done in {time.time() - t0:.1f}s\n")
 
-    # 4. Dashboard
-    print("[4/4] Building HTML dashboard...")
+    # 5. Dashboard
+    print("[5/5] Building HTML dashboard...")
     t0 = time.time()
     html_path = os.path.join(args.output_dir, "Recruitment_Survey_Dashboard.html")
     build_dashboard(results, html_path)
