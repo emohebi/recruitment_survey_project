@@ -34,8 +34,6 @@ body {
   opacity: 0.03; pointer-events: none; z-index: 9999;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-
-/* Header */
 header {
   padding: 48px 48px 32px;
   border-bottom: 1px solid var(--border);
@@ -49,8 +47,6 @@ header h1 {
 }
 header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; }
 .container { max-width: 1400px; margin: 0 auto; padding: 32px 48px 64px; }
-
-/* KPI row */
 .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
 .kpi-card {
   background: var(--surface); border: 1px solid var(--border);
@@ -71,8 +67,6 @@ header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; }
 .kpi-card:nth-child(3) .kpi-value { color: var(--accent3); }
 .kpi-card:nth-child(4) .kpi-value { color: var(--accent5); }
 .kpi-sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
-
-/* Panels */
 .chart-panel {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 28px; margin-bottom: 24px;
@@ -80,14 +74,11 @@ header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; }
 .chart-panel h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 .chart-panel .subtitle { font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
 .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-
 .section-header {
   font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700;
   margin: 40px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
   color: var(--accent4);
 }
-
-/* Bars */
 .bar-row { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
 .bar-label {
   width: 280px; min-width: 280px; text-align: right; padding-right: 16px;
@@ -98,7 +89,7 @@ header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; }
   border-radius: 4px; position: relative; overflow: hidden;
 }
 .bar-fill {
-  height: 100%; border-radius: 4px; transition: width 1s ease;
+  height: 100%; border-radius: 4px; transition: width 0.4s ease;
   display: flex; align-items: center; padding-left: 10px;
   font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
   color: var(--bg); min-width: fit-content;
@@ -108,8 +99,6 @@ header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; }
   width: 70px; min-width: 70px; text-align: center; font-size: 11px;
   color: var(--text-dim); font-family: 'Space Mono', monospace;
 }
-
-/* Concern table */
 .concern-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
 .concern-table th {
   text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border);
@@ -118,15 +107,77 @@ header p { color: var(--text-dim); margin-top: 8px; font-size: 14px; }
 }
 .concern-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
 .concern-table tr:hover { background: var(--surface2); }
-
-/* Note */
 .note-box {
   background: var(--surface2); border-left: 3px solid var(--accent1);
   padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 24px 0;
   font-size: 13px; color: var(--text-dim); line-height: 1.6;
 }
-
 canvas { max-height: 360px; }
+
+/* ─── Date range slider ─── */
+.slider-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
+}
+.slider-panel h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.slider-panel .subtitle { font-size: 12px; color: var(--text-dim); margin-bottom: 16px; }
+.slider-dates {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700;
+  color: var(--accent1); margin-bottom: 8px;
+}
+.slider-dates .date-badge {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 12px;
+}
+.range-track-wrap {
+  position: relative; height: 40px; margin: 0 4px;
+}
+.range-track-wrap .track-bg {
+  position: absolute; top: 16px; left: 0; right: 0; height: 6px;
+  background: var(--surface2); border-radius: 3px;
+}
+.range-track-wrap .track-fill {
+  position: absolute; top: 16px; height: 6px; border-radius: 3px;
+  background: var(--accent1); transition: left 0.05s, width 0.05s;
+}
+.range-track-wrap input[type=range] {
+  position: absolute; top: 0; left: 0; width: 100%; height: 40px;
+  -webkit-appearance: none; appearance: none;
+  background: transparent; pointer-events: none; margin: 0;
+}
+.range-track-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg); border: 3px solid var(--accent1);
+  cursor: grab; pointer-events: auto;
+  box-shadow: 0 0 0 4px rgba(88,166,255,0.15);
+  transition: box-shadow 0.2s;
+}
+.range-track-wrap input[type=range]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 6px rgba(88,166,255,0.25);
+}
+.range-track-wrap input[type=range]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg); border: 3px solid var(--accent1);
+  cursor: grab; pointer-events: auto;
+}
+.slider-meta {
+  display: flex; justify-content: center; align-items: center; gap: 16px;
+  margin-top: 8px;
+}
+.slider-pill {
+  display: inline-block; font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700; padding: 4px 14px;
+  border-radius: 20px; background: var(--surface2); color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.slider-pill strong { color: var(--accent1); }
+.slider-reset {
+  font-size: 12px; color: var(--accent1); cursor: pointer;
+  background: none; border: none; font-family: 'DM Sans', sans-serif;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.slider-reset:hover { color: var(--accent4); }
 
 @media (max-width: 900px) {
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
@@ -145,8 +196,6 @@ canvas { max-height: 360px; }
 
 <div class="container">
   <div class="note-box" id="noteBox"></div>
-
-  <!-- KPI Cards -->
   <div class="kpi-row" id="kpiRow"></div>
 
   <!-- Time Series -->
@@ -164,8 +213,29 @@ canvas { max-height: 360px; }
     </div>
   </div>
 
-  <!-- Cost Impact -->
+  <!-- Cost Impact with Slider -->
   <div class="section-header">Cost Impact — Which Regions &amp; Industries Are Most Affected?</div>
+
+  <div class="slider-panel">
+    <h2>Date range filter</h2>
+    <div class="subtitle">Drag the handles to select a date window. The cost impact bars below will recalculate using weighted proportions across the selected weeks.</div>
+    <div class="slider-dates">
+      <span class="date-badge" id="sliderStartLabel">—</span>
+      <span style="color:var(--text-dim);font-size:12px;font-weight:400;">to</span>
+      <span class="date-badge" id="sliderEndLabel">—</span>
+    </div>
+    <div class="range-track-wrap">
+      <div class="track-bg"></div>
+      <div class="track-fill" id="trackFill"></div>
+      <input type="range" id="sliderMin" min="0" max="100" value="0" step="1">
+      <input type="range" id="sliderMax" min="0" max="100" value="100" step="1">
+    </div>
+    <div class="slider-meta">
+      <span class="slider-pill" id="sliderPill"><strong>—</strong> weeks selected</span>
+      <button class="slider-reset" id="sliderReset">Reset to full range</button>
+    </div>
+  </div>
+
   <div class="chart-row">
     <div class="chart-panel">
       <h2>Cost Concern by State / Territory</h2>
@@ -182,6 +252,18 @@ canvas { max-height: 360px; }
     <h2>Cost Concern by Industry (ANZSIC Division)</h2>
     <div class="subtitle">Weighted proportion citing Costs as greatest concern</div>
     <div id="barsIndustry" class="bar-chart-container"></div>
+  </div>
+  <div class="chart-row">
+    <div class="chart-panel">
+      <h2>Cost Concern by Remoteness (ARIA)</h2>
+      <div class="subtitle">Major Cities / Inner Regional / Outer Regional / Remote</div>
+      <div id="barsARIA" class="bar-chart-container"></div>
+    </div>
+    <div class="chart-panel">
+      <h2>Cost Concern by Business Size</h2>
+      <div class="subtitle">Small / Medium / Large employers</div>
+      <div id="barsSize" class="bar-chart-container"></div>
+    </div>
   </div>
 
   <!-- Concern Distribution -->
@@ -214,7 +296,6 @@ canvas { max-height: 360px; }
 <script>
 const DATA = {{DATA_JSON}};
 
-// ─── Helpers ───
 Chart.defaults.color = '#8b949e';
 Chart.defaults.borderColor = '#30363d';
 Chart.defaults.font.family = "'DM Sans', sans-serif";
@@ -225,10 +306,10 @@ const fmtPct = v => (v * 100).toFixed(1) + '%';
   const nat = DATA.national;
   const latest = nat[nat.length - 1];
   document.getElementById('noteBox').innerHTML =
-    `<strong>Note:</strong> All indicators use weighted proportions (sum of weights). ` +
-    `Dataset contains <strong>${nat.length} week(s)</strong> of data ` +
-    `(latest: w/e ${latest.Week}). ` +
-    `Sample: <strong>N=${latest.N}</strong>, total weight: <strong>${latest.Sum_Weight.toFixed(1)}</strong>.`;
+    '<strong>Note:</strong> All indicators use weighted proportions (sum of weights). ' +
+    'Dataset contains <strong>' + nat.length + ' week(s)</strong> of data ' +
+    '(latest: w/e ' + latest.Week + '). ' +
+    'Sample: <strong>N=' + latest.N + '</strong>, total weight: <strong>' + latest.Sum_Weight.toFixed(1) + '</strong>.';
 })();
 
 // ─── KPIs ───
@@ -241,13 +322,13 @@ const fmtPct = v => (v * 100).toFixed(1) + '%';
     { label: 'Cost as Top Concern', value: nat.Cost_Concern },
   ];
   const row = document.getElementById('kpiRow');
-  kpis.forEach(k => {
+  kpis.forEach(function(k) {
     const card = document.createElement('div');
     card.className = 'kpi-card';
     card.innerHTML =
-      `<div class="kpi-label">${k.label}</div>` +
-      `<div class="kpi-value">${k.value != null ? (k.value * 100).toFixed(1) + '%' : 'N/A'}</div>` +
-      `<div class="kpi-sub">Week ending ${nat.Week} · N=${nat.N}</div>`;
+      '<div class="kpi-label">' + k.label + '</div>' +
+      '<div class="kpi-value">' + (k.value != null ? (k.value * 100).toFixed(1) + '%' : 'N/A') + '</div>' +
+      '<div class="kpi-sub">Week ending ' + nat.Week + ' · N=' + nat.N + '</div>';
     row.appendChild(card);
   });
 })();
@@ -256,18 +337,22 @@ const fmtPct = v => (v * 100).toFixed(1) + '%';
 new Chart(document.getElementById('chartCost'), {
   type: 'line',
   data: {
-    labels: DATA.national.map(d => d.Week),
+    labels: DATA.national.map(function(d) { return d.Week; }),
     datasets: [{
-      label: 'Cost Concern %', data: DATA.national.map(d => d.Cost_Concern != null ? d.Cost_Concern * 100 : null),
+      label: 'Cost Concern %',
+      data: DATA.national.map(function(d) { return d.Cost_Concern != null ? d.Cost_Concern * 100 : null; }),
       borderColor: '#ffa657', backgroundColor: 'rgba(255,166,87,0.12)', fill: true,
       tension: 0.3, pointRadius: 5, pointBackgroundColor: '#ffa657', borderWidth: 2.5,
     }]
   },
   options: {
     responsive: true,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtPct(ctx.parsed.y / 100) } } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: function(ctx) { return fmtPct(ctx.parsed.y / 100); } } }
+    },
     scales: {
-      y: { beginAtZero: true, ticks: { callback: v => v + '%' }, grid: { color: '#1c2330' } },
+      y: { beginAtZero: true, ticks: { callback: function(v) { return v + '%'; } }, grid: { color: '#1c2330' } },
       x: { grid: { display: false } }
     }
   }
@@ -277,13 +362,16 @@ new Chart(document.getElementById('chartCost'), {
 new Chart(document.getElementById('chartTriple'), {
   type: 'line',
   data: {
-    labels: DATA.national.map(d => d.Week),
+    labels: DATA.national.map(function(d) { return d.Week; }),
     datasets: [
-      { label: 'Recruitment Rate (RR)', data: DATA.national.map(d => d.RR != null ? d.RR * 100 : null),
+      { label: 'Recruitment Rate (RR)',
+        data: DATA.national.map(function(d) { return d.RR != null ? d.RR * 100 : null; }),
         borderColor: '#58a6ff', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: '#58a6ff', borderWidth: 2.5 },
-      { label: 'Difficulty Rate (RD)', data: DATA.national.map(d => d.RD != null ? d.RD * 100 : null),
+      { label: 'Difficulty Rate (RD)',
+        data: DATA.national.map(function(d) { return d.RD != null ? d.RD * 100 : null; }),
         borderColor: '#f78166', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: '#f78166', borderWidth: 2.5 },
-      { label: 'Future Staff Increase (FSI)', data: DATA.national.map(d => d.FSI != null ? d.FSI * 100 : null),
+      { label: 'Future Staff Increase (FSI)',
+        data: DATA.national.map(function(d) { return d.FSI != null ? d.FSI * 100 : null; }),
         borderColor: '#3fb950', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: '#3fb950', borderWidth: 2.5 },
     ]
   },
@@ -291,86 +379,218 @@ new Chart(document.getElementById('chartTriple'), {
     responsive: true,
     plugins: {
       legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' } },
-      tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y / 100) } }
+      tooltip: { callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y / 100); } } }
     },
     scales: {
-      y: { beginAtZero: true, ticks: { callback: v => v + '%' }, grid: { color: '#1c2330' } },
+      y: { beginAtZero: true, ticks: { callback: function(v) { return v + '%'; } }, grid: { color: '#1c2330' } },
       x: { grid: { display: false } }
     }
   }
 });
 
-// ─── Horizontal bars ───
+// ═══════════════════════════════════════════════════════════
+// Bar rendering helper
+// ═══════════════════════════════════════════════════════════
 function renderBars(containerId, items, labelKey, color) {
-  const el = document.getElementById(containerId);
-  const maxVal = Math.max(...items.map(d => d.Cost_Concern), 0.01);
-  items.forEach(d => {
-    const pct = d.Cost_Concern * 100;
-    const w = Math.max((d.Cost_Concern / maxVal) * 100, 0);
-    const isZero = pct < 0.01;
-    const row = document.createElement('div'); row.className = 'bar-row';
-    row.innerHTML =
-      `<div class="bar-label" title="${d[labelKey]}">${d[labelKey]}</div>` +
-      `<div class="bar-track"><div class="bar-fill ${isZero ? 'zero' : ''}" ` +
-      `style="width:${isZero ? '50px' : w + '%'};background:${isZero ? 'none' : color};">${pct.toFixed(1)}%</div></div>` +
-      `<div class="bar-n">n=${d.N}</div>`;
-    el.appendChild(row);
-  });
+  var el = document.getElementById(containerId);
+  var maxVal = 0.001;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].Cost_Concern > maxVal) maxVal = items[i].Cost_Concern;
+  }
+  var existing = el.querySelectorAll('.bar-row');
+  if (existing.length !== items.length) {
+    el.innerHTML = '';
+    for (var i = 0; i < items.length; i++) {
+      var d = items[i];
+      var pct = (d.Cost_Concern * 100).toFixed(1);
+      var w = Math.max((d.Cost_Concern / maxVal) * 100, 0);
+      var isZero = d.Cost_Concern < 0.0001;
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML =
+        '<div class="bar-label" title="' + d[labelKey] + '">' + d[labelKey] + '</div>' +
+        '<div class="bar-track"><div class="bar-fill ' + (isZero ? 'zero' : '') + '" ' +
+        'style="width:' + (isZero ? '50px' : w + '%') + ';background:' + (isZero ? 'none' : color) + ';">' + pct + '%</div></div>' +
+        '<div class="bar-n">n=' + d.N + '</div>';
+      el.appendChild(row);
+    }
+  } else {
+    for (var i = 0; i < items.length; i++) {
+      var d = items[i];
+      var pct = (d.Cost_Concern * 100).toFixed(1);
+      var w = Math.max((d.Cost_Concern / maxVal) * 100, 0);
+      var isZero = d.Cost_Concern < 0.0001;
+      var row = existing[i];
+      row.querySelector('.bar-label').textContent = d[labelKey];
+      row.querySelector('.bar-label').title = d[labelKey];
+      var fill = row.querySelector('.bar-fill');
+      fill.className = 'bar-fill' + (isZero ? ' zero' : '');
+      fill.style.width = isZero ? '50px' : w + '%';
+      fill.style.background = isZero ? 'none' : color;
+      fill.textContent = pct + '%';
+      row.querySelector('.bar-n').textContent = 'n=' + d.N;
+    }
+  }
 }
-renderBars('barsState', DATA.cost_by_state, 'State', '#ffa657');
-renderBars('barsGCC', DATA.cost_by_gcc, 'GCC', '#d2a8ff');
-renderBars('barsIndustry', DATA.cost_by_industry, 'Industry06', '#3fb950');
+
+// ═══════════════════════════════════════════════════════════
+// Date range slider + reactive cost impact bars
+// ═══════════════════════════════════════════════════════════
+(function() {
+  var weekSet = {};
+  var compKeys = ['cost_components_state', 'cost_components_industry', 'cost_components_gcc', 'cost_components_aria', 'cost_components_businesssize'];
+  for (var k = 0; k < compKeys.length; k++) {
+    var arr = DATA[compKeys[k]];
+    if (arr) {
+      for (var i = 0; i < arr.length; i++) weekSet[arr[i].Week] = true;
+    }
+  }
+  var allWeeks = Object.keys(weekSet).sort();
+  var N = allWeeks.length;
+
+  var sliderMin = document.getElementById('sliderMin');
+  var sliderMax = document.getElementById('sliderMax');
+  var trackFill = document.getElementById('trackFill');
+  var startLabel = document.getElementById('sliderStartLabel');
+  var endLabel = document.getElementById('sliderEndLabel');
+  var pill = document.getElementById('sliderPill');
+  var resetBtn = document.getElementById('sliderReset');
+
+  // If no component data available, fall back to static pre-computed bars
+  if (N === 0) {
+    if (DATA.cost_by_state) renderBars('barsState', DATA.cost_by_state, 'State', '#ffa657');
+    if (DATA.cost_by_gcc) renderBars('barsGCC', DATA.cost_by_gcc, 'GCC', '#d2a8ff');
+    if (DATA.cost_by_industry) renderBars('barsIndustry', DATA.cost_by_industry, 'Industry06', '#3fb950');
+    if (DATA.cost_by_aria) renderBars('barsARIA', DATA.cost_by_aria, 'ARIA', '#f78166');
+    if (DATA.cost_by_businesssize) renderBars('barsSize', DATA.cost_by_businesssize, 'BusinessSize', '#58a6ff');
+    startLabel.textContent = '—';
+    endLabel.textContent = '—';
+    pill.innerHTML = 'No date data available';
+    return;
+  }
+
+  // Aggregate: sum num_w and den_w across selected weeks per dimension value
+  function aggregate(componentData, dimKey, weekStart, weekEnd) {
+    var byDim = {};
+    for (var i = 0; i < componentData.length; i++) {
+      var row = componentData[i];
+      if (row.Week >= weekStart && row.Week <= weekEnd) {
+        var key = row[dimKey];
+        if (!byDim[key]) byDim[key] = { num_w: 0, den_w: 0, n: 0 };
+        byDim[key].num_w += row.num_w;
+        byDim[key].den_w += row.den_w;
+        byDim[key].n += row.n;
+      }
+    }
+    var results = [];
+    for (var key in byDim) {
+      var v = byDim[key];
+      var obj = { N: v.n, Cost_Concern: v.den_w > 0 ? v.num_w / v.den_w : 0 };
+      obj[dimKey] = key;
+      results.push(obj);
+    }
+    results.sort(function(a, b) { return b.Cost_Concern - a.Cost_Concern; });
+    return results;
+  }
+
+  function updateBars() {
+    var lo = +sliderMin.value;
+    var hi = +sliderMax.value;
+    if (lo > hi) { var t = lo; lo = hi; hi = t; }
+
+    var startIdx = Math.round(lo / 100 * (N - 1));
+    var endIdx = Math.round(hi / 100 * (N - 1));
+    var weekStart = allWeeks[startIdx];
+    var weekEnd = allWeeks[endIdx];
+    var weekCount = endIdx - startIdx + 1;
+
+    startLabel.textContent = weekStart;
+    endLabel.textContent = weekEnd;
+    pill.innerHTML = '<strong>' + weekCount + '</strong> week' + (weekCount !== 1 ? 's' : '') + ' selected';
+
+    trackFill.style.left = lo + '%';
+    trackFill.style.width = (hi - lo) + '%';
+
+    if (DATA.cost_components_state) {
+      renderBars('barsState', aggregate(DATA.cost_components_state, 'State', weekStart, weekEnd), 'State', '#ffa657');
+    }
+    if (DATA.cost_components_gcc) {
+      renderBars('barsGCC', aggregate(DATA.cost_components_gcc, 'GCC', weekStart, weekEnd), 'GCC', '#d2a8ff');
+    }
+    if (DATA.cost_components_industry) {
+      renderBars('barsIndustry', aggregate(DATA.cost_components_industry, 'Industry06', weekStart, weekEnd), 'Industry06', '#3fb950');
+    }
+    if (DATA.cost_components_aria) {
+      renderBars('barsARIA', aggregate(DATA.cost_components_aria, 'ARIA', weekStart, weekEnd), 'ARIA', '#f78166');
+    }
+    if (DATA.cost_components_businesssize) {
+      renderBars('barsSize', aggregate(DATA.cost_components_businesssize, 'BusinessSize', weekStart, weekEnd), 'BusinessSize', '#58a6ff');
+    }
+  }
+
+  sliderMin.addEventListener('input', updateBars);
+  sliderMax.addEventListener('input', updateBars);
+  resetBtn.addEventListener('click', function() {
+    sliderMin.value = 0;
+    sliderMax.value = 100;
+    updateBars();
+  });
+
+  // Initial render with full range
+  updateBars();
+})();
 
 // ─── Concern pie ───
 (function() {
-  const colors = ['#f85149','#ffa657','#d2a8ff','#58a6ff','#3fb950','#f78166','#79c0ff','#7ee787','#ffc680','#c9d1d9'];
-  const cd = DATA.concern_distribution;
+  var colors = ['#f85149','#ffa657','#d2a8ff','#58a6ff','#3fb950','#f78166','#79c0ff','#7ee787','#ffc680','#c9d1d9'];
+  var cd = DATA.concern_distribution;
   new Chart(document.getElementById('chartConcernPie'), {
     type: 'doughnut',
     data: {
-      labels: cd.map(d => d.Concern),
-      datasets: [{ data: cd.map(d => d.Pct), backgroundColor: colors, borderColor: '#161b22', borderWidth: 2 }]
+      labels: cd.map(function(d) { return d.Concern; }),
+      datasets: [{ data: cd.map(function(d) { return d.Pct; }), backgroundColor: colors, borderColor: '#161b22', borderWidth: 2 }]
     },
     options: {
       responsive: true,
       plugins: {
         legend: { position: 'right', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } } },
-        tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed.toFixed(1) + '%' } }
+        tooltip: { callbacks: { label: function(ctx) { return ctx.label + ': ' + ctx.parsed.toFixed(1) + '%'; } } }
       }
     }
   });
-  const tbody = document.querySelector('#concernTable tbody');
-  cd.forEach(d => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${d.Concern}</td>` +
-      `<td style="font-family:'Space Mono',monospace;color:${d.Pct > 0 ? '#ffa657' : 'var(--text-dim)'}">${d.Pct.toFixed(1)}%</td>` +
-      `<td style="color:var(--text-dim)">${d.N}</td>`;
+  var tbody = document.querySelector('#concernTable tbody');
+  for (var i = 0; i < cd.length; i++) {
+    var d = cd[i];
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + d.Concern + '</td>' +
+      '<td style="font-family:\'Space Mono\',monospace;color:' + (d.Pct > 0 ? '#ffa657' : 'var(--text-dim)') + '">' + d.Pct.toFixed(1) + '%</td>' +
+      '<td style="color:var(--text-dim)">' + d.N + '</td>';
     tbody.appendChild(tr);
-  });
+  }
 })();
 
 // ─── State indicators grouped bar ───
 (function() {
-  const states = DATA.by_state.map(d => d.State);
+  var states = DATA.by_state.map(function(d) { return d.State; });
   new Chart(document.getElementById('chartStateIndicators'), {
     type: 'bar',
     data: {
       labels: states,
       datasets: [
-        { label: 'RR', data: DATA.by_state.map(d => d.RR != null ? d.RR * 100 : 0), backgroundColor: '#58a6ff' },
-        { label: 'RD', data: DATA.by_state.map(d => d.RD != null ? d.RD * 100 : 0), backgroundColor: '#f78166' },
-        { label: 'FSI', data: DATA.by_state.map(d => d.FSI != null ? d.FSI * 100 : 0), backgroundColor: '#3fb950' },
-        { label: 'Cost Concern', data: DATA.by_state.map(d => d.Cost_Concern != null ? d.Cost_Concern * 100 : 0), backgroundColor: '#ffa657' },
+        { label: 'RR', data: DATA.by_state.map(function(d) { return d.RR != null ? d.RR * 100 : 0; }), backgroundColor: '#58a6ff' },
+        { label: 'RD', data: DATA.by_state.map(function(d) { return d.RD != null ? d.RD * 100 : 0; }), backgroundColor: '#f78166' },
+        { label: 'FSI', data: DATA.by_state.map(function(d) { return d.FSI != null ? d.FSI * 100 : 0; }), backgroundColor: '#3fb950' },
+        { label: 'Cost Concern', data: DATA.by_state.map(function(d) { return d.Cost_Concern != null ? d.Cost_Concern * 100 : 0; }), backgroundColor: '#ffa657' },
       ]
     },
     options: {
       responsive: true,
       plugins: {
         legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' } },
-        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' } }
+        tooltip: { callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%'; } } }
       },
       scales: {
-        y: { beginAtZero: true, ticks: { callback: v => v + '%' }, grid: { color: '#1c2330' } },
+        y: { beginAtZero: true, ticks: { callback: function(v) { return v + '%'; } }, grid: { color: '#1c2330' } },
         x: { grid: { display: false }, ticks: { maxRotation: 45 } }
       }
     }

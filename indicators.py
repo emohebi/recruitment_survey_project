@@ -121,6 +121,33 @@ def calc_concern_distribution(df: pd.DataFrame, weight_col: str = "Weight") -> p
     return pd.DataFrame(rows).sort_values("Pct", ascending=False).reset_index(drop=True)
 
 
+def calc_cost_weekly_components(df: pd.DataFrame, dim_col: str, weight_col: str = "Weight") -> pd.DataFrame:
+    """
+    Produce week × dimension rows with numerator and denominator weight sums
+    for Cost Concern. These components allow the dashboard JS to re-aggregate
+    across any date range by summing num_w and den_w, then dividing.
+
+    Returns DataFrame with columns: Week, <dim_col>, num_w, den_w, n
+    """
+    spec = INDICATORS["Cost_Concern"]
+    rows = []
+    weeks = sorted(df["Week"].dropna().unique())
+    for dim_val in sorted(df[dim_col].dropna().unique()):
+        for week in weeks:
+            sub = df[(df["Week"] == week) & (df[dim_col] == dim_val)]
+            if sub.empty:
+                continue
+            r = _weighted_proportion(sub, spec, weight_col)
+            rows.append({
+                "Week": week,
+                dim_col: dim_val,
+                "num_w": r["num_w"],
+                "den_w": r["den_w"],
+                "n": r["n"],
+            })
+    return pd.DataFrame(rows)
+
+
 def run_all_analyses(df: pd.DataFrame, weight_col: str = "Weight") -> dict:
     """
     Run every analysis and return a dict of DataFrames.
@@ -141,12 +168,18 @@ def run_all_analyses(df: pd.DataFrame, weight_col: str = "Weight") -> dict:
             results[f"by_{key}"] = calc_by_dimension(df, col, weight_col)
 
     # Cost impact rankings
-    for key in ["State", "Industry", "GCC"]:
+    for key in ["State", "Industry", "GCC", "ARIA", "BusinessSize"]:
         col = BREAKDOWNS[key]["col"]
         if col in df.columns:
             results[f"cost_{key}"] = calc_cost_impact(df, col, weight_col)
 
     # Full concern distribution
     results["concern_distribution"] = calc_concern_distribution(df, weight_col)
+
+    # Weekly component data for slider (num_w + den_w per week × dimension)
+    for key in ["State", "Industry", "GCC", "ARIA", "BusinessSize"]:
+        col = BREAKDOWNS[key]["col"]
+        if col in df.columns:
+            results[f"cost_components_{key}"] = calc_cost_weekly_components(df, col, weight_col)
 
     return results

@@ -48,10 +48,8 @@ def build_dashboard(results: dict, output_path: str):
     viz = {}
     viz["national"] = _df_to_records(results["national"])
 
-    for key in ["cost_State", "cost_Industry", "cost_GCC"]:
-        short = key.replace("cost_", "cost_by_").lower()
-        # Normalise: cost_State → cost_by_state
-        out_key = f"cost_by_{key.split('_')[1].lower()}"
+    for key in ["cost_State", "cost_Industry", "cost_GCC", "cost_ARIA", "cost_BusinessSize"]:
+        out_key = f"cost_by_{key.split('_', 1)[1].lower()}"
         if key in results:
             viz[out_key] = _df_to_records(results[key])
 
@@ -63,6 +61,16 @@ def build_dashboard(results: dict, output_path: str):
 
     if "concern_distribution" in results:
         viz["concern_distribution"] = _df_to_records(results["concern_distribution"])
+
+    # Weekly component data for the date-range slider (num_w + den_w per week × dimension)
+    comp_map = [
+        ("state", "State"), ("industry", "Industry06"), ("gcc", "GCC"),
+        ("aria", "ARIA"), ("businesssize", "BusinessSize"),
+    ]
+    for out_key, result_suffix in comp_map:
+        comp_key = f"cost_components_{result_suffix}"
+        if comp_key in results and not results[comp_key].empty:
+            viz[f"cost_components_{out_key}"] = _df_to_records(results[comp_key])
 
     data_json = json.dumps(viz, default=_serialise)
 
