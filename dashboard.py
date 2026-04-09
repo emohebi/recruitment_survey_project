@@ -64,7 +64,7 @@ def build_dashboard(results: dict, output_path: str):
 
     # Weekly component data for the date-range slider (num_w + den_w per week × dimension)
     comp_map = [
-        ("state", "State"), ("industry", "Industry06"), ("gcc", "GCC"),
+        ("state", "State"), ("industry", "Industry"), ("gcc", "GCC"),
         ("aria", "ARIA"), ("businesssize", "BusinessSize"),
     ]
     for out_key, result_suffix in comp_map:
